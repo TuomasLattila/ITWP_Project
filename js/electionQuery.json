@@ -1,0 +1,62 @@
+{
+    "query": [
+      {
+        "code": "Vuosi",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "2023"
+          ]
+        }
+      },
+      {
+        "code": "Sukupuoli",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "SSS",
+            "1",
+            "2"
+          ]
+        }
+      },
+      {
+        "code": "Puolue",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "03",
+            "02",
+            "01",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09"
+          ]
+        }
+      },
+      {
+        "code": "Vaalipiiri ja kunta vaalivuonna",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "SSS"
+          ]
+        }
+      },
+      {
+        "code": "Tiedot",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "evaa_aanet"
+          ]
+        }
+      }
+    ],
+    "response": {
+      "format": "json-stat2"
+    }
+  }
