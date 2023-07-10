@@ -11,10 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
 </head>
 <body>
-    <div class="grid-container">
-        <div id="map"></div>
-        <div class="grid-child">
+    <div class="container">
+        <div class="item1">
+            <div id="map"></div>
+        </div>
+        <div class="item2">
+            <label for="input-data">Etsi kuntaa: </label>
+            <input id="input-data" type="text">
+            <button id="submit-data">Etsi</button>
             <div id="chart"></div>
+            <div id="chart2"></div>
         </div>
     </div>
 </body>

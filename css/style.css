@@ -1,17 +1,37 @@
+body    {
+    background-image: linear-gradient(to bottom right, #121C84, #4218B8);
+}
+label   {
+    color: #ffffff;
+    font-weight: bold;
+}
+
 #map    {
-    height: 1000px;
+    height: 900px;
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
 }
 
 #chart  {
-    border: 3px solid red;
+    border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
 }
 
-.grid-container    {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 5px;
+#chart2  {
+    border: 3px solid rgb(47, 0, 255);
+    border-radius: 10px;
 }
 
+.container    {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.item1  {
+    flex: 1;
+
+}
+.item2  {
+    flex: 1;
+
+}

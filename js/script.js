@@ -1,69 +1,66 @@
+const inputField = document.getElementById("input-data")
+const submitBtn = document.getElementById("submit-data")
+
 //URLs for fetching data --------------------------------------
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
 const chartURL = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
 //-------------------------------------------------------------
 //Body JSON Query ---------------------------------------------
-const jsonQuery = {
-    "query": [
-      {
-        "code": "Vuosi",
-        "selection": {
-          "filter": "item",
-          "values": [
-            "2023"
-          ]
+const updateJsonQuery = (areaId) => {
+    const jsonQuery = {
+        "query": [
+        {
+            "code": "Sukupuoli",
+            "selection": {
+            "filter": "item",
+            "values": [
+                "SSS"
+            ]
+            }
+        },
+        {
+            "code": "Puolue",
+            "selection": {
+            "filter": "item",
+            "values": [
+                "03",
+                "02",
+                "01",
+                "04",
+                "05",
+                "06",
+                "07",
+                "08",
+                "09"
+            ]
+            }
+        },
+        {
+            "code": "Vaalipiiri ja kunta vaalivuonna",
+            "selection": {
+            "filter": "item",
+            "values": [
+                areaId
+            ]
+            }
+        },
+        {
+            "code": "Tiedot",
+            "selection": {
+            "filter": "item",
+            "values": [
+                "evaa_aanet"
+            ]
+            }
         }
-      },
-      {
-        "code": "Sukupuoli",
-        "selection": {
-          "filter": "item",
-          "values": [
-            "SSS"
-          ]
+        ],
+        "response": {
+        "format": "json-stat2"
         }
-      },
-      {
-        "code": "Puolue",
-        "selection": {
-          "filter": "item",
-          "values": [
-            "03",
-            "02",
-            "01",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09"
-          ]
-        }
-      },
-      {
-        "code": "Vaalipiiri ja kunta vaalivuonna",
-        "selection": {
-          "filter": "item",
-          "values": [
-            "SSS"
-          ]
-        }
-      },
-      {
-        "code": "Tiedot",
-        "selection": {
-          "filter": "item",
-          "values": [
-            "evaa_aanet"
-          ]
-        }
-      }
-    ],
-    "response": {
-      "format": "json-stat2"
     }
-}
-//-------------------------------------------------------------
+    return jsonQuery
+}    
+//-------------------------------------------------------
 
 //Initializing the map with borders of different municipalities in Finland.
 const initMap = async () => {
@@ -76,32 +73,53 @@ const initMap = async () => {
         attribution: "@ OpenStreetMap"
     }).addTo(map)
 
+    let google = L.tileLayer("https://{s}.google.com/vt/lyrs=s@221097413,traffic&x={x}&y={y}&z={z}", {
+      maxZoom: 20,
+      minZoom: 2,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }).addTo(map)
+
     let geoJson = L.geoJSON(await fetchData(geoURL), {
         weight: 2,
         onEachFeature: getFeature
     }).addTo(map)
+
+    let baseMaps = {
+      "OpenStreetMap": osm,
+      "Google satellite": google
+    }
+
+    L.control.layers(baseMaps).addTo(map)
 
     map.fitBounds(geoJson.getBounds())
 }
 
 //Method for creating features for the map
 const getFeature = (feature, layer) => {
-    const id = feature.id
+    const id = feature.properties.kunta
+    //console.log(id)
     if (!id) return;
     layer.bindTooltip(feature.properties.nimi)
 }
+
 //method for building the chart.
 const buildChart = async (body) => {
     const data = await fetchChartData(chartURL, body)
-    console.log(data)
+    //console.log(data)
 
-    const year = Object.values(data.dimension.Vuosi.category.label)[0]
+    const year = Object.values(data.dimension.Vuosi.category.label).reverse()[0]
     const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
     const parties = Object.values(data.dimension.Puolue.category.label)
-    const values = data.value
+    const values = data.value.reverse()
+    // console.log(values)
+    array = []
+    for (let i = 0; i < 9; i++) {
+        array.push(values[i])
+    }
+    // console.log(array)
 
-    const dataArray = [{name: area, values: values}]
-    console.log(values)
+    const dataArray = [{name: area, values: array.reverse()}]
+    //console.log(values)
 
     const chartData = {
         labels: parties,
@@ -113,6 +131,55 @@ const buildChart = async (body) => {
         data: chartData,
         type: 'bar',
     })
+}
+
+const buildChart2 = async (id) => {
+    const data = await fetchData(chartURL)
+    //console.log(data)
+    const valueTexts = data.variables[3].valueTexts
+    const values = data.variables[3].values
+    //console.log(valueTexts)
+    //console.log(values)
+
+    for (let i = 0; i < valueTexts.length; i++) {
+        let ID = values[i]
+        let res = valueTexts[i].slice(2, 5)
+        //console.log(res)
+        if (res == id)  {
+            let data = await fetchChartData(chartURL, updateJsonQuery(ID))
+            //console.log(data)
+            const labels = Object.values(data.dimension.Vuosi.category.label)
+            const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
+            const parties = Object.values(data.dimension.Puolue.category.label)
+            const values = data.value
+
+            parties.forEach((party, index) => {
+                let array = []
+                for (let i = 0; i < 11; i++)    {
+                    array.push(values[i * 9 + index])
+                }
+                parties[index] = {
+                    name: party,
+                    values: array
+                }
+            })
+
+            // parties.forEach((party) => {
+            //     console.log(party.values)
+            // })
+
+            const chartData = {
+                labels: labels,
+                datasets: parties
+            }
+
+            const chart = new frappe.Chart("#chart2", {
+                title: area + ":",
+                data: chartData,
+                type: 'line',
+            })
+        }
+    };
 }
 
 //Fetching methods:
@@ -138,4 +205,5 @@ const fetchChartData = async (url, body) => {
 
 //Initialitzation calls
 initMap()
-buildChart(jsonQuery)
+buildChart(updateJsonQuery("SSS"))
+buildChart2("692")
