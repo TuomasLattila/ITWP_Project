@@ -156,6 +156,7 @@ const buildChart = async (body) => {
         title: area + " (" + year + "):",
         data: chartData,
         type: 'bar',
+        height: 350
     })
 }
 
@@ -203,6 +204,7 @@ const buildChart2 = async (id) => {
                 title: area + ":",
                 data: chartData,
                 type: 'line',
+                height: 400
             })
         }
     };
