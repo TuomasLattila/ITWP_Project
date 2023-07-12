@@ -1,4 +1,4 @@
-const inputField = document.getElementById("input-data")
+const dropDownMenu = document.getElementById("municipality-list")
 const submitBtn = document.getElementById("submit-data")
 
 //URLs for fetching data --------------------------------------
@@ -61,6 +61,32 @@ const updateJsonQuery = (areaId) => {
     return jsonQuery
 }    
 //-------------------------------------------------------
+const initDropDownMenu = async () => {
+    const data = await fetchData(geoURL)
+    const areaList = data.features
+    //console.log(data)
+
+    areaList.forEach((area) => {
+        const option = document.createElement('option')
+        option.innerHTML = area.properties.nimi
+        dropDownMenu.appendChild(option)
+    })
+}
+
+submitBtn.addEventListener("click", async () => {
+    const name = dropDownMenu.value
+    //console.log(name)
+
+    const data = await fetchData(geoURL)
+    const areaList = data.features
+
+    areaList.forEach((area) => {
+        if (area.properties.nimi === name)  {
+            buildChart2(area.properties.kunta)
+        }
+    })
+
+})
 
 //Initializing the map with borders of different municipalities in Finland.
 const initMap = async () => {
@@ -204,6 +230,6 @@ const fetchChartData = async (url, body) => {
 }
 
 //Initialitzation calls
+initDropDownMenu()
 initMap()
 buildChart(updateJsonQuery("SSS"))
-buildChart2("692")
