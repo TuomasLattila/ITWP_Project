@@ -1,7 +1,7 @@
 body    {
     background-image: linear-gradient(to bottom right, #121C84, #4218B8);
 }
-label   {
+.txt   {
     color: #ffffff;
     font-weight: bold;
 }
@@ -20,11 +20,12 @@ label   {
 #chart2  {
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
+    
 }
 
 .container    {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 5px;
 }
 .item1  {
@@ -33,4 +34,8 @@ label   {
 }
 .item2  {
     flex: 1;
+}
+
+.fr-chart-line {
+    stroke-width: 80px;
 }

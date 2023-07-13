@@ -73,20 +73,20 @@ const initDropDownMenu = async () => {
     })
 }
 
-submitBtn.addEventListener("click", async () => {
-    const name = dropDownMenu.value
-    //console.log(name)
+// submitBtn.addEventListener("click", async () => {
+//     const name = dropDownMenu.value
+//     //console.log(name)
 
-    const data = await fetchData(geoURL)
-    const areaList = data.features
+//     const data = await fetchData(geoURL)
+//     const areaList = data.features
 
-    areaList.forEach((area) => {
-        if (area.properties.nimi === name)  {
-            buildChart2(area.properties.kunta)
-        }
-    })
+//     areaList.forEach((area) => {
+//         if (area.properties.nimi === name)  {
+//             //buildChart2(area.properties.kunta)
+//         }
+//     })
 
-})
+// })
 
 //Initializing the map with borders of different municipalities in Finland.
 const initMap = async () => {
@@ -107,6 +107,7 @@ const initMap = async () => {
 
     let geoJson = L.geoJSON(await fetchData(geoURL), {
         weight: 2,
+        fillColor: '#3480eb',
         onEachFeature: getFeature
     }).addTo(map)
 
@@ -120,12 +121,28 @@ const initMap = async () => {
     map.fitBounds(geoJson.getBounds())
 }
 
+var lastLayer
+
 //Method for creating features for the map
 const getFeature = (feature, layer) => {
     const id = feature.properties.kunta
     //console.log(id)
     if (!id) return;
     layer.bindTooltip(feature.properties.nimi)
+    layer.addEventListener('click', () => {
+        if(lastLayer != undefined)  {
+            lastLayer.setStyle({
+                fillColor: '#3480eb',
+                fillOpacity: 0.2
+            })
+        }
+        lastLayer = layer
+        layer.setStyle({
+            fillColor: 'red',
+            fillOpacity: 0.5
+        })
+        buildChart2(id)
+    })
 }
 
 //method for building the chart.
@@ -156,7 +173,7 @@ const buildChart = async (body) => {
         title: area + " (" + year + "):",
         data: chartData,
         type: 'bar',
-        height: 350
+        height: 350,
     })
 }
 
@@ -204,7 +221,11 @@ const buildChart2 = async (id) => {
                 title: area + ":",
                 data: chartData,
                 type: 'line',
-                height: 400
+                height: 400,
+                colors: ['#006288', '#ffde55', '#f54b4b', '#349a2b', '#61bf1a', '#f00a64', '#ffdd93', '#0135a5'],
+                lineOptions: {
+                    hideDots: 1,
+                }
             })
         }
     };
