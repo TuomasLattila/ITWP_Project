@@ -1,4 +1,6 @@
-body    {
+html    {
+    height: 100%;
+    width: 100%;
     background-image: linear-gradient(to bottom right, #121C84, #4218B8);
 }
 .txt   {
@@ -7,35 +9,48 @@ body    {
 }
 
 #map    {
-    height: 900px;
+    height: 600px;
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
+    min-width: 400px;
 }
 
 #chart  {
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
+    width: 100%;
 }
 
 #chart2  {
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
-    
+    width: 100%;
 }
 
 .container    {
     display: flex;
-    flex-wrap: nowrap;
+    width: 100%;
     gap: 5px;
 }
 .item1  {
     flex: 1;
-
+    width: 100%;
+    padding: 5px;
 }
 .item2  {
     flex: 1;
+    width: 100%;
+    padding: 5px;
 }
 
-.fr-chart-line {
-    stroke-width: 80px;
+@media (min-width: 800px)   {
+    .container  {
+        flex-wrap: nowrap
+    }
+}
+
+@media (max-width: 799px)   {
+    .container  {
+        flex-wrap: wrap;
+    }
 }

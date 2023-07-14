@@ -91,7 +91,7 @@ const initDropDownMenu = async () => {
 //Initializing the map with borders of different municipalities in Finland.
 const initMap = async () => {
     let map = L.map('map', {
-        minZoom: -3
+        minZoom: 5,
     })
 
     let osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -115,6 +115,11 @@ const initMap = async () => {
       "OpenStreetMap": osm,
       "Google satellite": google
     }
+
+    let sW = L.latLng(59.8089, 20.5563)
+    let nE = L.latLng(70.0924, 31.5869)
+    let bounds = L.latLngBounds(sW, nE)
+    map.setMaxBounds(bounds)
 
     L.control.layers(baseMaps).addTo(map)
 
