@@ -8,49 +8,68 @@ html    {
     font-weight: bold;
 }
 
+ul  {
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px;
+}
+
+li  {
+    display:inline-flex;
+    padding: 5px;
+}
+
 #map    {
     height: 600px;
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
-    min-width: 400px;
+    min-width: 350px;
 }
 
 #chart  {
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
-    width: 100%;
+    background-color: #333;
 }
 
 #chart2  {
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
-    width: 100%;
+    background-color: #333;
 }
 
 .container    {
-    display: flex;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
     width: 100%;
-    gap: 5px;
 }
 .item1  {
-    flex: 1;
-    width: 100%;
+    max-width: 100%;
     padding: 5px;
 }
 .item2  {
-    flex: 1;
-    width: 100%;
+    max-width: 100%;
     padding: 5px;
 }
 
 @media (min-width: 800px)   {
-    .container  {
-        flex-wrap: nowrap
-    }
 }
 
 @media (max-width: 799px)   {
     .container  {
-        flex-wrap: wrap;
+        grid-template-columns: 100%
+    }   
+    .item1  {
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+    .item2  {
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 2;
+        grid-row-end: 3;
     }
 }

@@ -4,31 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data portal</title>
+    <link rel="shortcut icon" type="image/svg" href="pictures/stats.svg">
+
     <script src="js/script.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
+
     <link rel="stylesheet" href="distLeaflet/leaflet.css">
     <script src="distLeaflet/leaflet.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
 </head>
 <body>
-    <div class="container">
+    <nav>
+        <ul>
+            <li>
+                <h2 class="txt">Eduskuntavaalien statistiikka</h2>
+            </li>
+
+            <li>
+                <select name="municipality-list" id="municipality-list"></select>
+                <button id="submit-data">Luo</button>
+            </li>
+        </ul>
+    </nav>
+        <div class="container">
         <div class="item1">
             <div id="map"></div>
         </div>
         <div class="item2">
-            <label class="txt" for="municipality-list">Valitse kunta:</label>
-            <select name="municipality-list" id="municipality-list"></select>
-            <button id="submit-data">Luo</button>
-            <br><br>
-
             <label class="txt" for="chart">Viimeisin äänestystulos:</label>
             <div id="chart"></div>
+            <button id="expChart1">Export</button>
 
-            <br>
+            <br><br>
+
             <label class="txt" for="chart2">Äänestyshistoria (Valitse kunta kartalta): </label>
             <br>
 
             <div id="chart2"></div>
+            <button id="expChart2">Export</button>
         </div>
     </div>
 </body>

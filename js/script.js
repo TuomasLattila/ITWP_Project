@@ -1,5 +1,8 @@
 const dropDownMenu = document.getElementById("municipality-list")
 const submitBtn = document.getElementById("submit-data")
+const expBtn1 = document.getElementById("expChart1")
+const expBtn2 = document.getElementById("expChart2")
+
 
 //URLs for fetching data --------------------------------------
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
@@ -61,6 +64,9 @@ const updateJsonQuery = (areaId) => {
     return jsonQuery
 }    
 //-------------------------------------------------------
+
+let lastLayer
+
 const initDropDownMenu = async () => {
     const data = await fetchData(geoURL)
     const areaList = data.features
@@ -90,6 +96,7 @@ const initDropDownMenu = async () => {
 
 //Initializing the map with borders of different municipalities in Finland.
 const initMap = async () => {
+    let lastLayer
     let map = L.map('map', {
         minZoom: 5,
     })
@@ -109,6 +116,7 @@ const initMap = async () => {
         weight: 2,
         fillColor: '#3480eb',
         onEachFeature: getFeature
+            
     }).addTo(map)
 
     let baseMaps = {
@@ -125,8 +133,6 @@ const initMap = async () => {
 
     map.fitBounds(geoJson.getBounds())
 }
-
-var lastLayer
 
 //Method for creating features for the map
 const getFeature = (feature, layer) => {
@@ -178,7 +184,13 @@ const buildChart = async (body) => {
         title: area + " (" + year + "):",
         data: chartData,
         type: 'bar',
-        height: 350,
+        // height: 350,
+    })
+    //Ability to export chart to svg
+    expBtn1.addEventListener('click', () => {
+        if (chart != undefined)    {
+            chart.export()
+        }
     })
 }
 
@@ -226,10 +238,16 @@ const buildChart2 = async (id) => {
                 title: area + ":",
                 data: chartData,
                 type: 'line',
-                height: 400,
+                // height: 400,
                 colors: ['#006288', '#ffde55', '#f54b4b', '#349a2b', '#61bf1a', '#f00a64', '#ffdd93', '#0135a5'],
                 lineOptions: {
                     hideDots: 1,
+                }
+            })
+            //Ability to export chart to svg
+            expBtn2.addEventListener('click', () => {
+                if (chart != undefined)    {
+                    chart.export()
                 }
             })
         }
@@ -261,3 +279,4 @@ const fetchChartData = async (url, body) => {
 initDropDownMenu()
 initMap()
 buildChart(updateJsonQuery("SSS"))
+buildChart2("ko ")
