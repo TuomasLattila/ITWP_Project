@@ -2,11 +2,12 @@ const dropDownMenu = document.getElementById("municipality-list")
 const submitBtn = document.getElementById("submit-data")
 const expBtn1 = document.getElementById("expChart1")
 const expBtn2 = document.getElementById("expChart2")
-
+const expBtn3 = document.getElementById("expChart3")
 
 //URLs for fetching data --------------------------------------
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
 const chartURL = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
+const chartURL2 = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/kuol/statfin_kuol_pxt_12au.px'
 //-------------------------------------------------------------
 //Body JSON Query ---------------------------------------------
 const updateJsonQuery = (areaId) => {
@@ -62,7 +63,37 @@ const updateJsonQuery = (areaId) => {
         }
     }
     return jsonQuery
-}    
+}
+
+const updateJsonQuery2 = (areaId) => {
+    const jsonQuery = {
+        "query": [
+          {
+            "code": "Alue",
+            "selection": {
+              "filter": "agg:_Kunnat aakkosjärjestyksessä 2023.agg",
+              "values": [
+                areaId
+              ]
+            }
+          },
+          {
+            "code": "Tiedot",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "koknetmuutto",
+                "vaesto"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json-stat2"
+        }
+      }
+    return jsonQuery
+}
 //-------------------------------------------------------
 
 let lastLayer
@@ -96,7 +127,6 @@ const initDropDownMenu = async () => {
 
 //Initializing the map with borders of different municipalities in Finland.
 const initMap = async () => {
-    let lastLayer
     let map = L.map('map', {
         minZoom: 5,
     })
@@ -115,8 +145,8 @@ const initMap = async () => {
     let geoJson = L.geoJSON(await fetchData(geoURL), {
         weight: 2,
         fillColor: '#3480eb',
-        onEachFeature: getFeature
-            
+        onEachFeature: getFeature,
+        //style: getStyle
     }).addTo(map)
 
     let baseMaps = {
@@ -153,8 +183,33 @@ const getFeature = (feature, layer) => {
             fillOpacity: 0.5
         })
         buildChart2(id)
+        buildChart3("KU"+id)
     })
 }
+
+// const getStyle = (feature) => {
+//     const color = getMostVotedPartyColor(feature.properties.kunta)
+//     console.log(color)
+//     return {
+//         fillColor: color,
+//         fillOpacity: 0.5
+//     }
+// }
+
+// const getMostVotedPartyColor = async (id) => {
+//     const data = await fetchChartData(chartURL, updateJsonQuery(id))
+//     const values = data.value.reverse().slice(0, 9).reverse()
+//     const colors = ['#006288', '#ffde55', '#f54b4b', '#349a2b', '#61bf1a', '#f00a64', '#ffdd93', '#0135a5']
+//     let maxValue = colors[0]
+//     let i = 0
+//     values.forEach((value, index) => {
+//         if (value > maxValue)   {
+//             maxValue = value
+//             i = index
+//         }
+//     })
+//     return colors[i]
+// }
 
 //method for building the chart.
 const buildChart = async (body) => {
@@ -165,7 +220,7 @@ const buildChart = async (body) => {
     const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
     const parties = Object.values(data.dimension.Puolue.category.label)
     const values = data.value.reverse()
-    // console.log(values)
+    //console.log(values)
     array = []
     for (let i = 0; i < 9; i++) {
         array.push(values[i])
@@ -204,6 +259,7 @@ const buildChart2 = async (id) => {
 
     for (let i = 0; i < valueTexts.length; i++) {
         let ID = values[i]
+        //console.log(ID)
         let res = valueTexts[i].slice(2, 5)
         //console.log(res)
         if (res == id)  {
@@ -213,7 +269,8 @@ const buildChart2 = async (id) => {
             const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
             const parties = Object.values(data.dimension.Puolue.category.label)
             const values = data.value
-
+            //console.log(values)
+            
             parties.forEach((party, index) => {
                 let array = []
                 for (let i = 0; i < 11; i++)    {
@@ -254,6 +311,53 @@ const buildChart2 = async (id) => {
     };
 }
 
+const buildChart3 = async (id) => {
+    const data = await fetchChartData(chartURL2, updateJsonQuery2(id))
+    const values = data.value
+    const labels = Object.values(data.dimension.Vuosi.category.label)
+    const area = Object.values(data.dimension.Alue.category.label)[0]
+    console.log(area)
+
+    populations = []
+    years = []
+    netImigrations = []
+    values.forEach((value, index) => {
+        if (index % 2 == 0) {
+            netImigrations.push(value)
+        } else {
+            if (Math.floor(index / 2) % 2 == 0) {
+                populations.push(value)
+                years.push(labels[Math.floor(index/2)])
+            }
+        }
+    })
+
+    const dataArray = [{name: area, values: populations}]
+
+    const chartData = {
+        labels: years,
+        datasets: dataArray
+    }
+
+    const chart = new frappe.Chart("#chart3", {
+        title: area+":",
+        data: chartData,
+        type: 'line',
+        colors: ['#8B0000'],
+        lineOptions: {
+            regionFill: 1,
+            hideDots: 1,
+        }
+    })
+
+    //Ability to export chart to svg
+    expBtn3.addEventListener('click', () => {
+        if (chart != undefined)    {
+            chart.export()
+        }
+    })
+}
+
 //Fetching methods:
 const fetchData = async (url) => {
     const dataPromise = await fetch(url)
@@ -280,3 +384,5 @@ initDropDownMenu()
 initMap()
 buildChart(updateJsonQuery("SSS"))
 buildChart2("ko ")
+buildChart3("SSS")
+//getMostVotedPartyColor("SSS")
