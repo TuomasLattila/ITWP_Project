@@ -3,11 +3,13 @@ const submitBtn = document.getElementById("submit-data")
 const expBtn1 = document.getElementById("expChart1")
 const expBtn2 = document.getElementById("expChart2")
 const expBtn3 = document.getElementById("expChart3")
+const expBtn4 = document.getElementById("expChart4")
 
 //URLs for fetching data --------------------------------------
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
 const chartURL = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
-const chartURL2 = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/kuol/statfin_kuol_pxt_12au.px'
+//const chartURL2 = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/kuol/statfin_kuol_pxt_12au.px'
+const chartURL3 = 'https://pxdata.stat.fi:443/PxWeb/api/v1/fi/Kuntien_avainluvut/2021/kuntien_avainluvut_2021_aikasarja.px'
 //-------------------------------------------------------------
 //Body JSON Query ---------------------------------------------
 const updateJsonQuery = (areaId) => {
@@ -65,13 +67,43 @@ const updateJsonQuery = (areaId) => {
     return jsonQuery
 }
 
-const updateJsonQuery2 = (areaId) => {
+// const updateJsonQuery2 = (areaId) => {
+//     const jsonQuery = {
+//         "query": [
+//           {
+//             "code": "Alue",
+//             "selection": {
+//               "filter": "agg:_Kunnat aakkosjärjestyksessä 2023.agg",
+//               "values": [
+//                 areaId
+//               ]
+//             }
+//           },
+//           {
+//             "code": "Tiedot",
+//             "selection": {
+//               "filter": "item",
+//               "values": [
+//                 "koknetmuutto",
+//                 "vaesto"
+//               ]
+//             }
+//           }
+//         ],
+//         "response": {
+//           "format": "json-stat2"
+//         }
+//       }
+//     return jsonQuery
+// }
+
+const updateJsonQuery3 = (areaId) => {
     const jsonQuery = {
         "query": [
           {
-            "code": "Alue",
+            "code": "Alue 2021",
             "selection": {
-              "filter": "agg:_Kunnat aakkosjärjestyksessä 2023.agg",
+              "filter": "item",
               "values": [
                 areaId
               ]
@@ -82,8 +114,8 @@ const updateJsonQuery2 = (areaId) => {
             "selection": {
               "filter": "item",
               "values": [
-                "koknetmuutto",
-                "vaesto"
+                "M411",
+                "M140"
               ]
             }
           }
@@ -183,7 +215,7 @@ const getFeature = (feature, layer) => {
             fillOpacity: 0.5
         })
         buildChart2(id)
-        buildChart3("KU"+id)
+        buildChart4(id)
     })
 }
 
@@ -311,37 +343,88 @@ const buildChart2 = async (id) => {
     };
 }
 
-const buildChart3 = async (id) => {
-    const data = await fetchChartData(chartURL2, updateJsonQuery2(id))
+// const buildChart3 = async (id) => {
+//     const data = await fetchChartData(chartURL2, updateJsonQuery2(id))
+//     const values = data.value
+//     const labels = Object.values(data.dimension.Vuosi.category.label)
+//     const area = Object.values(data.dimension.Alue.category.label)[0]
+//     //console.log(area)
+
+//     populations = []
+//     years = []
+//     netImigrations = []
+//     values.forEach((value, index) => {
+//         if (index % 2 == 0) {
+//             netImigrations.push(value)
+//         } else {
+//             if (Math.floor(index / 2) % 2 == 0) {
+//                 populations.push(value)
+//                 years.push(labels[Math.floor(index/2)])
+//             }
+//         }
+//     })
+
+//     const dataArray = [{name: area, values: populations}]
+
+//     const chartData = {
+//         labels: years,
+//         datasets: dataArray
+//     }
+
+//     const chart = new frappe.Chart("#chart3", {
+//         title: area+":",
+//         data: chartData,
+//         type: 'line',
+//         colors: ['#8B0000'],
+//         lineOptions: {
+//             regionFill: 1,
+//             hideDots: 1,
+//         }
+//     })
+
+//     //Ability to export chart to svg
+//     expBtn3.addEventListener('click', () => {
+//         if (chart != undefined)    {
+//             chart.export()
+//         }
+//     })
+// }
+
+const buildChart4 = async (id) => {
+    const data = await fetchChartData(chartURL3, updateJsonQuery3(id))
     const values = data.value
     const labels = Object.values(data.dimension.Vuosi.category.label)
-    const area = Object.values(data.dimension.Alue.category.label)[0]
-    console.log(area)
+    const area = Object.values(data.dimension["Alue 2021"].category.label)[0]
+    console.log(data)
 
-    populations = []
-    years = []
-    netImigrations = []
+    let populations = []
+    let employments = []
     values.forEach((value, index) => {
-        if (index % 2 == 0) {
-            netImigrations.push(value)
-        } else {
-            if (Math.floor(index / 2) % 2 == 0) {
-                populations.push(value)
-                years.push(labels[Math.floor(index/2)])
-            }
+        if (index < 35) {
+            populations.push(value)
+        }
+        else {
+            employments.push(value)
         }
     })
+    console.log(populations)
+    console.log(employments)
 
-    const dataArray = [{name: area, values: populations}]
+    const dataArray1 = [{name: area, values: populations}]
+    const dataArray2 = [{name: area, values: employments}]
 
-    const chartData = {
-        labels: years,
-        datasets: dataArray
+    const chartData1 = {
+        labels: labels,
+        datasets: dataArray1
+    }
+    const chartData2 = {
+        labels: labels,
+        datasets: dataArray2
     }
 
-    const chart = new frappe.Chart("#chart3", {
+    const chart1 = new frappe.Chart("#chart3", {
         title: area+":",
-        data: chartData,
+        data: chartData1,
         type: 'line',
         colors: ['#8B0000'],
         lineOptions: {
@@ -350,10 +433,14 @@ const buildChart3 = async (id) => {
         }
     })
 
-    //Ability to export chart to svg
-    expBtn3.addEventListener('click', () => {
-        if (chart != undefined)    {
-            chart.export()
+    const chart2 = new frappe.Chart("#chart4", {
+        title: area+":",
+        data: chartData2,
+        type: 'line',
+        colors: ['#8B0000'],
+        lineOptions: {
+            regionFill: 1,
+            hideDots: 1,
         }
     })
 }
@@ -384,5 +471,5 @@ initDropDownMenu()
 initMap()
 buildChart(updateJsonQuery("SSS"))
 buildChart2("ko ")
-buildChart3("SSS")
+buildChart4("SSS")
 //getMostVotedPartyColor("SSS")
