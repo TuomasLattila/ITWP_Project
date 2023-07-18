@@ -1,9 +1,12 @@
-const dropDownMenu = document.getElementById("municipality-list")
-const submitBtn = document.getElementById("submit-data")
+const dropDownMenu1 = document.getElementById("municipality-list1")
+const dropDownMenu2 = document.getElementById("municipality-list2")
+const pageBtn = document.getElementById("change-page")
 const expBtn1 = document.getElementById("expChart1")
 const expBtn2 = document.getElementById("expChart2")
 const expBtn3 = document.getElementById("expChart3")
 const expBtn4 = document.getElementById("expChart4")
+
+window.var1 = "hello world"
 
 //URLs for fetching data --------------------------------------
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
@@ -136,26 +139,34 @@ const initDropDownMenu = async () => {
     //console.log(data)
 
     areaList.forEach((area) => {
-        const option = document.createElement('option')
-        option.innerHTML = area.properties.nimi
-        dropDownMenu.appendChild(option)
+        const option1 = document.createElement('option')
+        const option2 = document.createElement('option')
+        option1.innerHTML = area.properties.nimi
+        option2.innerHTML = area.properties.nimi
+        dropDownMenu1.appendChild(option1)
+        dropDownMenu2.appendChild(option2)
     })
 }
 
-// submitBtn.addEventListener("click", async () => {
-//     const name = dropDownMenu.value
-//     //console.log(name)
+pageBtn.addEventListener("click", async () => {
+    const name1 = dropDownMenu1.value
+    const name2 = dropDownMenu2.value
+    let id1
+    let id2
 
-//     const data = await fetchData(geoURL)
-//     const areaList = data.features
+    const data = await fetchData(geoURL)
+    const areaList = data.features
 
-//     areaList.forEach((area) => {
-//         if (area.properties.nimi === name)  {
-//             //buildChart2(area.properties.kunta)
-//         }
-//     })
-
-// })
+    areaList.forEach((area) => {
+        if (area.properties.nimi === name1)  {
+            id1 = area.properties.kunta
+        }
+        if (area.properties.nimi === name2)  {
+            id2 = area.properties.kunta
+        }
+    })
+    window.location.href="page2.html"
+})
 
 //Initializing the map with borders of different municipalities in Finland.
 const initMap = async () => {
@@ -314,10 +325,6 @@ const buildChart2 = async (id) => {
                 }
             })
 
-            // parties.forEach((party) => {
-            //     console.log(party.values)
-            // })
-
             const chartData = {
                 labels: labels,
                 datasets: parties
@@ -339,6 +346,7 @@ const buildChart2 = async (id) => {
                     chart.export()
                 }
             })
+            break
         }
     };
 }
@@ -395,30 +403,40 @@ const buildChart4 = async (id) => {
     const values = data.value
     const labels = Object.values(data.dimension.Vuosi.category.label)
     const area = Object.values(data.dimension["Alue 2021"].category.label)[0]
-    console.log(data)
+    //console.log(data)
 
     let populations = []
     let employments = []
+    let years = []
     values.forEach((value, index) => {
         if (index < 35) {
-            populations.push(value)
+            if (index % 2 == 0) {
+                populations.push(value)
+            }
         }
         else {
-            employments.push(value)
+            if (index % 2 != 0) {
+                employments.push(value)
+            }
         }
     })
-    console.log(populations)
-    console.log(employments)
+    labels.forEach((label, index) => {
+        if (index % 2 == 0) {
+            years.push(label)
+        }
+    })
+    //console.log(populations)
+    //console.log(employments)
 
     const dataArray1 = [{name: area, values: populations}]
     const dataArray2 = [{name: area, values: employments}]
 
     const chartData1 = {
-        labels: labels,
+        labels: years,
         datasets: dataArray1
     }
     const chartData2 = {
-        labels: labels,
+        labels: years,
         datasets: dataArray2
     }
 
@@ -426,7 +444,7 @@ const buildChart4 = async (id) => {
         title: area+":",
         data: chartData1,
         type: 'line',
-        colors: ['#8B0000'],
+        colors: ['#0000FF'],
         lineOptions: {
             regionFill: 1,
             hideDots: 1,
@@ -437,10 +455,23 @@ const buildChart4 = async (id) => {
         title: area+":",
         data: chartData2,
         type: 'line',
-        colors: ['#8B0000'],
+        colors: ['#0000FF'],
         lineOptions: {
             regionFill: 1,
             hideDots: 1,
+        }
+    })
+
+    //Ability to export chart to svg
+    expBtn3.addEventListener('click', () => {
+        if (chart1 != undefined)    {
+            chart1.export()
+        }
+    })
+    
+    expBtn4.addEventListener('click', () => {
+        if (chart2 != undefined)    {
+            chart2.export()
         }
     })
 }
