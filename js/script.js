@@ -1,5 +1,3 @@
-const dropDownMenu1 = document.getElementById("municipality-list1")
-const dropDownMenu2 = document.getElementById("municipality-list2")
 const pageBtn = document.getElementById("change-page")
 const expBtn1 = document.getElementById("expChart1")
 const expBtn2 = document.getElementById("expChart2")
@@ -133,38 +131,42 @@ const updateJsonQuery3 = (areaId) => {
 
 let lastLayer
 
-const initDropDownMenu = async () => {
-    const data = await fetchData(geoURL)
-    const areaList = data.features
-    //console.log(data)
+// const initDropDownMenu = async () => {
+//     const data = await fetchData(geoURL)
+//     const areaList = data.features
+//     //console.log(data)
 
-    areaList.forEach((area) => {
-        const option1 = document.createElement('option')
-        const option2 = document.createElement('option')
-        option1.innerHTML = area.properties.nimi
-        option2.innerHTML = area.properties.nimi
-        dropDownMenu1.appendChild(option1)
-        dropDownMenu2.appendChild(option2)
-    })
-}
+//     areaList.forEach((area) => {
+//         const option1 = document.createElement('option')
+//         const option2 = document.createElement('option')
+//         option1.innerHTML = area.properties.nimi
+//         option2.innerHTML = area.properties.nimi
+//         dropDownMenu1.appendChild(option1)
+//         dropDownMenu2.appendChild(option2)
+//     })
+// }
 
 pageBtn.addEventListener("click", async () => {
-    const name1 = dropDownMenu1.value
-    const name2 = dropDownMenu2.value
-    let id1
-    let id2
+    // const name1 = dropDownMenu1.value
+    // const name2 = dropDownMenu2.value
+    // let id1
+    // let id2
 
-    const data = await fetchData(geoURL)
-    const areaList = data.features
+    // const data = await fetchData(geoURL)
+    // const areaList = data.features
 
-    areaList.forEach((area) => {
-        if (area.properties.nimi === name1)  {
-            id1 = area.properties.kunta
-        }
-        if (area.properties.nimi === name2)  {
-            id2 = area.properties.kunta
-        }
-    })
+    // areaList.forEach((area) => {
+    //     if (area.properties.nimi === name1)  {
+    //         id1 = area.properties.kunta
+    //     }
+    //     if (area.properties.nimi === name2)  {
+    //         id2 = area.properties.kunta
+    //     }
+    // })
+
+    // const event = new CustomEvent('customEvent', {area1: id1, area2: id2})
+    // pageBtn.dispatchEvent(event)
+
     window.location.href="page2.html"
 })
 
@@ -498,7 +500,7 @@ const fetchChartData = async (url, body) => {
 }
 
 //Initialitzation calls
-initDropDownMenu()
+//initDropDownMenu()
 initMap()
 buildChart(updateJsonQuery("SSS"))
 buildChart2("ko ")

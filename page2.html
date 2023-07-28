@@ -12,9 +12,34 @@
     <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
 </head>
 <body>
-    <p>testi</p>
-    <button id="change-page">Taikaisin</button>
+    <script>
+        //Drag&Drop functionality
+        function drag(event)    {
+            event.dataTransfer.setData("text", event.target.id)
+        }
 
+        function allowDrop(event)   {
+            event.preventDefault()
+        }
+
+        function drop(event)    {
+            event.preventDefault()
+            let data = event.dataTransfer.getData("text")
+            event.target.appendChild(document.getElementById(data))
+        }
+    </script>
+    
+    <button class="backBtn" id="change-page">Taikaisin</button>
+    <br>
+    <select class="areaList" name="municipality-list1" id="municipality-list1"></select>
+    <select class="areaList" name="municipality-list2" id="municipality-list2"></select>
+    <button class="compareBtn" id="compare-button">Vertaa</button>
+    
+    <div id="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2 draggable="true" ondragstart="drag(event)" id="header"></h2>
+    </div>
+    <div id="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    
     <div class="container">
         <div class="item1">
             <div id="chart1"></div>

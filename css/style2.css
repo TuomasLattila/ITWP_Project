@@ -4,6 +4,36 @@ html    {
     background-image: linear-gradient(to bottom right, #121C84, #4218B8);
 }
 
+.backBtn {
+    background-color: #1d1c1c;
+    color: #ffffff;
+    border-radius: 10px;
+    width: 80px;
+}
+
+#header {
+    color: #ffffff;
+}
+
+#drop-area {
+    height: 50px;
+    border: 3px solid black;
+}
+
+.areaList {
+    background-color: #1d1c1c;
+    color: #ffffff;
+    border-radius: 5px;
+
+}
+
+.compareBtn {
+    background-color: #1d1c1c;
+    color: #ffffff;
+    border-radius: 10px;
+    width: 80px;
+}
+
 .container {
     display: grid;
     grid-template-columns: 50% 50%;

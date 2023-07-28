@@ -3,6 +3,23 @@ html    {
     width: 100%;
     background-image: linear-gradient(to bottom right, #121C84, #4218B8);
 }
+
+.expBtn {
+    background-color: #1d1c1c;
+    color: #ffffff;
+    border-radius: 10px;
+    width: 80px;
+    height: 23px;
+}
+
+.compBtn {
+    background-color: #1d1c1c;
+    color: #ffffff;
+    border-radius: 10px;
+    width: 80px;
+    height: 60px;
+}
+
 .txt   {
     color: #ffffff;
     font-weight: bold;
@@ -12,11 +29,13 @@ ul  {
     background-color: #333;
     border-radius: 10px;
     box-shadow: 3px 3px 3px;
+    text-align: center;
 }
 
 li  {
-    display:inline-flex;
+    display:inline-block;
     padding: 5px;
+    
 }
 
 #map    {
