@@ -165,7 +165,7 @@ const buildChart = async (id, chartID, yearID) => {
                 title: area + ":",
                 data: chartData,
                 type: 'pie',
-                height: 800,
+                height: 650,
                 colors: ['#006288', '#ffde55', '#f54b4b', '#349a2b', '#61bf1a', '#f00a64', '#ffdd93', '#0135a5'],
             })
             break
@@ -193,6 +193,7 @@ const fetchChartData = async (url, body) => {
     return dataJSON
 }
 
+//Initialitzation calls
 initDropDownMenu()
 buildChart('405', "#chart1", "2023")
 buildChart('091', "#chart2", "2023")

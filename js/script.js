@@ -9,7 +9,6 @@ window.var1 = "hello world"
 //URLs for fetching data --------------------------------------
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
 const chartURL = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
-//const chartURL2 = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/kuol/statfin_kuol_pxt_12au.px'
 const chartURL3 = 'https://pxdata.stat.fi:443/PxWeb/api/v1/fi/Kuntien_avainluvut/2021/kuntien_avainluvut_2021_aikasarja.px'
 //-------------------------------------------------------------
 //Body JSON Query ---------------------------------------------
@@ -68,37 +67,7 @@ const updateJsonQuery = (areaId) => {
     return jsonQuery
 }
 
-// const updateJsonQuery2 = (areaId) => {
-//     const jsonQuery = {
-//         "query": [
-//           {
-//             "code": "Alue",
-//             "selection": {
-//               "filter": "agg:_Kunnat aakkosjärjestyksessä 2023.agg",
-//               "values": [
-//                 areaId
-//               ]
-//             }
-//           },
-//           {
-//             "code": "Tiedot",
-//             "selection": {
-//               "filter": "item",
-//               "values": [
-//                 "koknetmuutto",
-//                 "vaesto"
-//               ]
-//             }
-//           }
-//         ],
-//         "response": {
-//           "format": "json-stat2"
-//         }
-//       }
-//     return jsonQuery
-// }
-
-const updateJsonQuery3 = (areaId) => {
+const updateJsonQuery2 = (areaId) => {
     const jsonQuery = {
         "query": [
           {
@@ -131,42 +100,8 @@ const updateJsonQuery3 = (areaId) => {
 
 let lastLayer
 
-// const initDropDownMenu = async () => {
-//     const data = await fetchData(geoURL)
-//     const areaList = data.features
-//     //console.log(data)
-
-//     areaList.forEach((area) => {
-//         const option1 = document.createElement('option')
-//         const option2 = document.createElement('option')
-//         option1.innerHTML = area.properties.nimi
-//         option2.innerHTML = area.properties.nimi
-//         dropDownMenu1.appendChild(option1)
-//         dropDownMenu2.appendChild(option2)
-//     })
-// }
-
+//Page change button listener
 pageBtn.addEventListener("click", async () => {
-    // const name1 = dropDownMenu1.value
-    // const name2 = dropDownMenu2.value
-    // let id1
-    // let id2
-
-    // const data = await fetchData(geoURL)
-    // const areaList = data.features
-
-    // areaList.forEach((area) => {
-    //     if (area.properties.nimi === name1)  {
-    //         id1 = area.properties.kunta
-    //     }
-    //     if (area.properties.nimi === name2)  {
-    //         id2 = area.properties.kunta
-    //     }
-    // })
-
-    // const event = new CustomEvent('customEvent', {area1: id1, area2: id2})
-    // pageBtn.dispatchEvent(event)
-
     window.location.href="page2.html"
 })
 
@@ -228,36 +163,12 @@ const getFeature = (feature, layer) => {
             fillOpacity: 0.5
         })
         buildChart2(id)
-        buildChart4(id)
+        buildChart3(id)
     })
 }
 
-// const getStyle = (feature) => {
-//     const color = getMostVotedPartyColor(feature.properties.kunta)
-//     console.log(color)
-//     return {
-//         fillColor: color,
-//         fillOpacity: 0.5
-//     }
-// }
-
-// const getMostVotedPartyColor = async (id) => {
-//     const data = await fetchChartData(chartURL, updateJsonQuery(id))
-//     const values = data.value.reverse().slice(0, 9).reverse()
-//     const colors = ['#006288', '#ffde55', '#f54b4b', '#349a2b', '#61bf1a', '#f00a64', '#ffdd93', '#0135a5']
-//     let maxValue = colors[0]
-//     let i = 0
-//     values.forEach((value, index) => {
-//         if (value > maxValue)   {
-//             maxValue = value
-//             i = index
-//         }
-//     })
-//     return colors[i]
-// }
-
 //method for building the chart.
-const buildChart = async (body) => {
+const buildChart1 = async (body) => {
     const data = await fetchChartData(chartURL, body)
     //console.log(data)
 
@@ -353,55 +264,8 @@ const buildChart2 = async (id) => {
     };
 }
 
-// const buildChart3 = async (id) => {
-//     const data = await fetchChartData(chartURL2, updateJsonQuery2(id))
-//     const values = data.value
-//     const labels = Object.values(data.dimension.Vuosi.category.label)
-//     const area = Object.values(data.dimension.Alue.category.label)[0]
-//     //console.log(area)
-
-//     populations = []
-//     years = []
-//     netImigrations = []
-//     values.forEach((value, index) => {
-//         if (index % 2 == 0) {
-//             netImigrations.push(value)
-//         } else {
-//             if (Math.floor(index / 2) % 2 == 0) {
-//                 populations.push(value)
-//                 years.push(labels[Math.floor(index/2)])
-//             }
-//         }
-//     })
-
-//     const dataArray = [{name: area, values: populations}]
-
-//     const chartData = {
-//         labels: years,
-//         datasets: dataArray
-//     }
-
-//     const chart = new frappe.Chart("#chart3", {
-//         title: area+":",
-//         data: chartData,
-//         type: 'line',
-//         colors: ['#8B0000'],
-//         lineOptions: {
-//             regionFill: 1,
-//             hideDots: 1,
-//         }
-//     })
-
-//     //Ability to export chart to svg
-//     expBtn3.addEventListener('click', () => {
-//         if (chart != undefined)    {
-//             chart.export()
-//         }
-//     })
-// }
-
-const buildChart4 = async (id) => {
-    const data = await fetchChartData(chartURL3, updateJsonQuery3(id))
+const buildChart3 = async (id) => {
+    const data = await fetchChartData(chartURL3, updateJsonQuery2(id))
     const values = data.value
     const labels = Object.values(data.dimension.Vuosi.category.label)
     const area = Object.values(data.dimension["Alue 2021"].category.label)[0]
@@ -500,9 +364,7 @@ const fetchChartData = async (url, body) => {
 }
 
 //Initialitzation calls
-//initDropDownMenu()
 initMap()
-buildChart(updateJsonQuery("SSS"))
+buildChart1(updateJsonQuery("SSS"))
 buildChart2("ko ")
-buildChart4("SSS")
-//getMostVotedPartyColor("SSS")
+buildChart3("SSS")

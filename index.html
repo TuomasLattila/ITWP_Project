@@ -18,41 +18,49 @@
     <nav>
         <ul>
             <li>
-                <h2 class="txt">Eduskuntavaalien statistiikka</h2>
-            </li>
-
-            <li>
-                <button class="compBtn" id="change-page">Vertaile kuntia</button>
+                <h1 class="txt">Eduskuntavaalien kuntakohtaista statistiikka, vuosilta 1983-2023</h1>
             </li>
         </ul>
     </nav>
     <div class="container">
-        <div class="item1">
-            <div id="map"></div>
+        <div class="info-item" id="item6">
+            <div class="info">
+                <h2 id="info-text">
+                    Valitse haluamasi kunta kartalta
+                </h2>
+                <h3>
+                    Kaaviot päivittyvät automaattisesti
+                </h3>
+            </div>
+            <button class="compBtn" id="change-page">Vertaile kuntia</button>
         </div>
 
-        <div class="item3">
+        <div class="map-item" id="item1">
+            <div class="map" id="map"></div>
+        </div>
+
+        <div class="item" id="item3">
             <label class="txt" for="chart4">Työllisyys-% (Valitse kunta kartalta): </label>
-            <div id="chart4"></div>
-            <button class="expBtn" id="expChart4">Export</button>
+            <div class="chart" id="chart4"></div>
+            <button class="expBtn1" id="expChart4">Export</button>
         </div>
 
-        <div class="item4">
+        <div class="item" id="item4">
             <label class="txt" for="chart">Viimeisin äänestystulos:</label>
-            <div id="chart"></div>
-            <button class="expBtn" id="expChart1">Export</button>
+            <div class="chart" id="chart"></div>
+            <button class="expBtn2" id="expChart1">Export</button>
         </div>
 
-        <div class="item5">
+        <div class="item" id="item5">
             <label class="txt" for="chart2">Äänestyshistoria (Valitse kunta kartalta): </label>
-            <div id="chart2"></div>
-            <button class="expBtn" id="expChart2">Export</button>
+            <div class="chart" id="chart2"></div>
+            <button class="expBtn1" id="expChart2">Export</button>
         </div>
 
-        <div class="item2">
+        <div class="item" id="item2">
             <label class="txt" for="chart3">Väkiluku (Valitse kunta kartalta): </label>
-            <div id="chart3"></div>
-            <button class="expBtn" id="expChart3">Export</button>
+            <div class="chart" id="chart3"></div>
+            <button class="expBtn1" id="expChart3">Export</button>
         </div>
     </div>
 </body>

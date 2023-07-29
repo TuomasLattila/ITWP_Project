@@ -4,9 +4,9 @@ html    {
     background-image: linear-gradient(to bottom right, #121C84, #4218B8);
 }
 
-.backBtn {
+#change-page {
     background-color: #333;
-    color: #ffffff;
+    color: #FFFDFA;
     border-radius: 10px;
     border: #333;
     width: 80px;
@@ -14,9 +14,15 @@ html    {
 }
 
 .header {
-    display: flex;
-    color: #ffffff;
+    display: grid;
+    grid-template-rows: 50% 50%;
+    color: #FFFDFA;
+}
+
+.header-item {
     text-align: center;
+    height: 50px;
+    margin: 0%;
 }
 
 #drag-container {
@@ -31,21 +37,22 @@ html    {
     background-color: rgb(7, 7, 7);
     border-radius: 5px;
     border: black solid 3px;
-    color: #ffffff;
+    color: #FFFDFA;
 }
 
 #year-label1 {
     font-size: 30pt;
-    color: #ffffff;
+    color: #FFFDFA;
 }
 #year-label2 {
     font-size: 30pt;
-    color: #ffffff;
+    color: #FFFDFA;
 }
 
 .drop-container {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: auto auto;
+    grid-gap: 20px;
 }
 
 .drag-area  {
@@ -72,7 +79,7 @@ html    {
 .areaList {
     margin-left: 20px;
     background-color: #333;
-    color: #ffffff;
+    color: #FFFDFA;
     border-radius: 5px;
     border: #333;
     max-width: 200px;
@@ -105,3 +112,16 @@ html    {
         height: 100px;
     }
 }
+
+@media (max-width: 1114px)   {
+    #info {
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 636px)   {
+    #info {
+        margin-bottom: 70px;
+    }
+}
+
