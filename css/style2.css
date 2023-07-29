@@ -5,33 +5,78 @@ html    {
 }
 
 .backBtn {
-    background-color: #1d1c1c;
+    background-color: #333;
     color: #ffffff;
     border-radius: 10px;
+    border: #333;
     width: 80px;
+    height: 30px;
 }
 
-#header {
+.header {
+    display: flex;
+    color: #ffffff;
+    text-align: center;
+}
+
+#drag-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.year {
+    margin: auto;
+    cursor: grab;
+    padding: 5px;
+    background-color: rgb(7, 7, 7);
+    border-radius: 5px;
+    border: black solid 3px;
     color: #ffffff;
 }
 
-#drop-area {
+#year-label1 {
+    font-size: 30pt;
+    color: #ffffff;
+}
+#year-label2 {
+    font-size: 30pt;
+    color: #ffffff;
+}
+
+.drop-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.drag-area  {
     height: 50px;
-    border: 3px solid black;
+    background-color: #1d1c1e;
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px;
+    text-align: center;
+}
+
+.drop-area {
+    height: 50px;
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px;
+    text-align: center;
+}
+
+.areaSelectors {
+    display: grid;
+    grid-template-columns: 50% 50%;
 }
 
 .areaList {
-    background-color: #1d1c1c;
+    margin-left: 20px;
+    background-color: #333;
     color: #ffffff;
     border-radius: 5px;
-
-}
-
-.compareBtn {
-    background-color: #1d1c1c;
-    color: #ffffff;
-    border-radius: 10px;
-    width: 80px;
+    border: #333;
+    max-width: 200px;
+    height: 30px;
 }
 
 .container {
@@ -53,4 +98,10 @@ html    {
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
+}
+
+@media (max-width: 646px)   {
+    #drag-container {
+        height: 100px;
+    }
 }

@@ -1,14 +1,24 @@
 const dropDownMenu1 = document.getElementById("municipality-list1")
 const dropDownMenu2 = document.getElementById("municipality-list2")
-const compareBtn = document.getElementById("compare-button")
 const pageBtn = document.getElementById("change-page")
-const header = document.getElementById("header")
+const dropArea1 = document.getElementById("drop-area1")
+const dropArea2 = document.getElementById("drop-area2")
+
 const chartURL = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
 
-const updateJsonQuery = (areaId) => {
+const updateJsonQuery = (areaId, year) => {
     const jsonQuery = {
         "query": [
+        {
+            "code": "Vuosi",
+            "selection": {
+                "filter": "item",
+                "values": [
+                    year
+                ]
+            }
+        },
         {
             "code": "Sukupuoli",
             "selection": {
@@ -65,26 +75,41 @@ pageBtn.addEventListener("click", () => {
     window.location.href = "index.html"
 })
 
-compareBtn.addEventListener('click', async () => {
-    const name1 = dropDownMenu1.value
-    const name2 = dropDownMenu2.value
-    let id1
-    let id2
+dropArea1.addEventListener('drop', async () => {
+    const yearLabel1 = document.getElementById("year-label1")
+    await updateChart(dropDownMenu1, "#chart1", yearLabel1.innerText)
+})
+
+dropArea2.addEventListener('drop', async () => {
+    const yearLabel2 = document.getElementById("year-label2")
+    await updateChart(dropDownMenu2, "#chart2", yearLabel2.innerText)
+})
+
+//updates chart data
+dropDownMenu1.addEventListener('change', async () => {
+    const yearLabel1 = document.getElementById("year-label1")
+    await updateChart(dropDownMenu1, "#chart1", yearLabel1.innerText)
+})
+
+dropDownMenu2.addEventListener('change', async () => {
+    const yearLabel2 = document.getElementById("year-label2")
+    await updateChart(dropDownMenu2, "#chart2", yearLabel2.innerText)
+})
+
+const updateChart = async (dropDownMenu, chartID, year) => {
+    const name = dropDownMenu.value
+    let id
 
     const data = await fetchData(geoURL)
     const areaList = data.features
 
     areaList.forEach((area) => {
-        if (area.properties.nimi === name1)  {
-            id1 = area.properties.kunta
-        }
-        if (area.properties.nimi === name2)  {
-            id2 = area.properties.kunta
+        if (area.properties.nimi === name)  {
+            id = area.properties.kunta
         }
     })
-    buildChart(id1, "#chart1")
-    buildChart(id2, "#chart2")
-})
+    buildChart(id, chartID, year)
+}
 
 const initDropDownMenu = async () => {
     const data = await fetchData(geoURL)
@@ -101,7 +126,7 @@ const initDropDownMenu = async () => {
     })
 }
 
-const buildChart = async (id, chartID) => {
+const buildChart = async (id, chartID, yearID) => {
     const data = await fetchData(chartURL)
     //console.log(data)
     const valueTexts = data.variables[3].valueTexts
@@ -115,14 +140,14 @@ const buildChart = async (id, chartID) => {
         let res = valueTexts[i].slice(2, 5)
         //console.log(res)
         if (res == id)  {
-            let data = await fetchChartData(chartURL, updateJsonQuery(ID))
+            //console.log(yearID)
+            let data = await fetchChartData(chartURL, updateJsonQuery(ID, yearID))
             //console.log(data)
             const year = Object.values(data.dimension.Vuosi.category.label).reverse()[0]
             const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
             const parties = Object.values(data.dimension.Puolue.category.label)
             const values = data.value.reverse()
             //console.log(values)
-            header.innerText = "Vuosi: "+year
 
             array = []
             for (let i = 0; i < 9; i++) {
@@ -169,6 +194,6 @@ const fetchChartData = async (url, body) => {
 }
 
 initDropDownMenu()
-buildChart('405', "#chart1")
-buildChart('091', "#chart2")
+buildChart('405', "#chart1", "2023")
+buildChart('091', "#chart2", "2023")
 

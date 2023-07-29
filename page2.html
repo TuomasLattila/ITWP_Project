@@ -15,7 +15,7 @@
     <script>
         //Drag&Drop functionality
         function drag(event)    {
-            event.dataTransfer.setData("text", event.target.id)
+            event.dataTransfer.setData("text", event.target.innerText)
         }
 
         function allowDrop(event)   {
@@ -25,21 +25,44 @@
         function drop(event)    {
             event.preventDefault()
             let data = event.dataTransfer.getData("text")
-            event.target.appendChild(document.getElementById(data))
+            event.target.innerHTML = data
         }
     </script>
-    
-    <button class="backBtn" id="change-page">Taikaisin</button>
-    <br>
-    <select class="areaList" name="municipality-list1" id="municipality-list1"></select>
-    <select class="areaList" name="municipality-list2" id="municipality-list2"></select>
-    <button class="compareBtn" id="compare-button">Vertaa</button>
-    
-    <div id="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h2 draggable="true" ondragstart="drag(event)" id="header"></h2>
+    <div class="header">
+        <button class="backBtn" id="change-page">Taikaisin</button>
+        <h1>Vedä vuosi ja valitse haluamasi kunta</h1>
     </div>
-    <div id="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <br>
     
+    <div id="drag-container" class="drag-area">
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">2023</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">2019</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">2015</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">2011</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">2007</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">2003</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">1999</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">1995</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">1991</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">1987</div>
+        <div class="year" draggable="true" ondragstart="drag(event)" id="header">1983</div>
+    </div>
+    <br>
+    <div class="drop-container">
+        <div id="drop-area1" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div id="year-label1">2023</div>
+        </div>
+        <div id="drop-area2" class="drop-area" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div id="year-label2">2023</div>
+        </div>
+    </div>
+
+    <br>
+    <div class="areaSelectors">
+        <select class="areaList" name="municipality-list1" id="municipality-list1"></select>
+        <select class="areaList" name="municipality-list2" id="municipality-list2"></select>
+    </div>
+
     <div class="container">
         <div class="item1">
             <div id="chart1"></div>
