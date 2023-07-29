@@ -106,7 +106,7 @@ li  {
     }
     .container  {
         grid-template-columns: 40% 30% 30%;
-        grid-template-rows: 20% 20% 30% 30%;
+        grid-template-rows: 10% 10% 40% 40%;
     }
     #item1  {
         grid-column-start: 1;
@@ -152,7 +152,7 @@ li  {
     }
     .container  {
         grid-template-columns: 50% 50%;
-        grid-template-rows: 20% 30% 30% 40%;
+        grid-template-rows: 10% 30% 30% 30%;
     }
     #item1  {
         grid-column-start: 1;
@@ -206,7 +206,7 @@ li  {
     }
     .container  {
         grid-template-columns: 100%;
-        grid-template-rows: 20% 70% 30% 30% 30% 30%;
+        grid-template-rows: 5% 31% 16% 16% 16% 16%;
     }   
     #item1  {
         grid-column-start: 1;
@@ -237,5 +237,11 @@ li  {
         grid-column-end: 2;
         grid-row-start: 6;
         grid-row-end: 7;
+    }
+    #item6  {
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 1;
+        grid-row-end: 2;
     }
 }
