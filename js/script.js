@@ -1,18 +1,17 @@
+//HTML Elements-------------------------------------------------
 const pageBtn = document.getElementById("change-page")
 const expBtn1 = document.getElementById("expChart1")
 const expBtn2 = document.getElementById("expChart2")
 const expBtn3 = document.getElementById("expChart3")
 const expBtn4 = document.getElementById("expChart4")
-
-window.var1 = "hello world"
-
-//URLs for fetching data --------------------------------------
+//--------------------------------------------------------------
+//URLs for fetching data ---------------------------------------
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
-const chartURL = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
-const chartURL3 = 'https://pxdata.stat.fi:443/PxWeb/api/v1/fi/Kuntien_avainluvut/2021/kuntien_avainluvut_2021_aikasarja.px'
-//-------------------------------------------------------------
-//Body JSON Query ---------------------------------------------
-const updateJsonQuery = (areaId) => {
+const chartURL1 = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
+const chartURL2 = 'https://pxdata.stat.fi:443/PxWeb/api/v1/fi/Kuntien_avainluvut/2021/kuntien_avainluvut_2021_aikasarja.px'
+//--------------------------------------------------------------
+//JSON Query bodies --------------------------------------------
+const updateJsonQuery1 = (areaId) => {
     const jsonQuery = {
         "query": [
         {
@@ -98,14 +97,44 @@ const updateJsonQuery2 = (areaId) => {
 }
 //-------------------------------------------------------
 
-let lastLayer
+let LAST_LAYER //global variable for the last municipality that was clicked
 
 //Page change button listener
 pageBtn.addEventListener("click", async () => {
     window.location.href="page2.html"
 })
 
-//Initializing the map with borders of different municipalities in Finland.
+//Listeners for the export buttons:
+expBtn1.addEventListener('click', () => {
+    convertDownloadChart("elction_result(2023)", "chart")
+})
+
+expBtn2.addEventListener('click', () => {
+    convertDownloadChart("election_history", "chart2")
+})
+
+expBtn3.addEventListener('click', () => {
+    convertDownloadChart("population", "chart3")
+})
+
+expBtn4.addEventListener('click', () => {
+    convertDownloadChart("employment_rate", "chart4")
+})
+
+//Method for converting html element to canvas and downloading it as PNG
+const convertDownloadChart = (name, chartID) => {
+    html2canvas(document.getElementById(chartID)).then((canvas) => {
+        const imgURL = canvas.toDataURL("image/png")
+        const link = document.createElement('a')
+        link.href = imgURL
+        link.download = name + ".png"
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    })
+}
+
+//Initializing the map with layers of different municipalities in Finland.
 const initMap = async () => {
     let map = L.map('map', {
         minZoom: 5,
@@ -126,14 +155,13 @@ const initMap = async () => {
         weight: 2,
         fillColor: '#3480eb',
         onEachFeature: getFeature,
-        //style: getStyle
     }).addTo(map)
 
     let baseMaps = {
       "OpenStreetMap": osm,
       "Google satellite": google
     }
-
+    //Adding boundaries to the map
     let sW = L.latLng(59.8089, 20.5563)
     let nE = L.latLng(70.0924, 31.5869)
     let bounds = L.latLngBounds(sW, nE)
@@ -147,44 +175,39 @@ const initMap = async () => {
 //Method for creating features for the map
 const getFeature = (feature, layer) => {
     const id = feature.properties.kunta
-    //console.log(id)
     if (!id) return;
     layer.bindTooltip(feature.properties.nimi)
     layer.addEventListener('click', () => {
-        if(lastLayer != undefined)  {
-            lastLayer.setStyle({
+        if(LAST_LAYER != undefined)  {
+            LAST_LAYER.setStyle({
                 fillColor: '#3480eb',
                 fillOpacity: 0.2
             })
         }
-        lastLayer = layer
         layer.setStyle({
             fillColor: 'red',
             fillOpacity: 0.5
         })
+        LAST_LAYER = layer
         buildChart2(id)
         buildChart3(id)
     })
 }
 
-//method for building the chart.
+//method for building chart (#chart) for the data of latest election result (2023).
 const buildChart1 = async (body) => {
-    const data = await fetchChartData(chartURL, body)
-    //console.log(data)
-
+    const data = await fetchChartData(chartURL1, body)
     const year = Object.values(data.dimension.Vuosi.category.label).reverse()[0]
     const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
     const parties = Object.values(data.dimension.Puolue.category.label)
     const values = data.value.reverse()
-    //console.log(values)
+    
     array = []
     for (let i = 0; i < 9; i++) {
         array.push(values[i])
     }
-    // console.log(array)
 
     const dataArray = [{name: area, values: array.reverse()}]
-    //console.log(values)
 
     const chartData = {
         labels: parties,
@@ -195,37 +218,25 @@ const buildChart1 = async (body) => {
         title: area + " (" + year + "):",
         data: chartData,
         type: 'bar',
-        // height: 350,
-    })
-    //Ability to export chart to svg
-    expBtn1.addEventListener('click', () => {
-        if (chart != undefined)    {
-            chart.export()
-        }
     })
 }
 
+//method for building chart (#chart2) for the data of election results in a clicked municipality (1983-2023).
 const buildChart2 = async (id) => {
-    const data = await fetchData(chartURL)
-    //console.log(data)
+    const data = await fetchData(chartURL1)
     const valueTexts = data.variables[3].valueTexts
     const values = data.variables[3].values
-    //console.log(valueTexts)
-    //console.log(values)
 
     for (let i = 0; i < valueTexts.length; i++) {
         let ID = values[i]
-        //console.log(ID)
         let res = valueTexts[i].slice(2, 5)
-        //console.log(res)
+    
         if (res == id)  {
-            let data = await fetchChartData(chartURL, updateJsonQuery(ID))
-            //console.log(data)
+            let data = await fetchChartData(chartURL1, updateJsonQuery1(ID))
             const labels = Object.values(data.dimension.Vuosi.category.label)
             const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
             const parties = Object.values(data.dimension.Puolue.category.label)
             const values = data.value
-            //console.log(values)
             
             parties.forEach((party, index) => {
                 let array = []
@@ -247,16 +258,9 @@ const buildChart2 = async (id) => {
                 title: area + ":",
                 data: chartData,
                 type: 'line',
-                // height: 400,
                 colors: ['#006288', '#ffde55', '#f54b4b', '#349a2b', '#61bf1a', '#f00a64', '#ffdd93', '#0135a5'],
                 lineOptions: {
                     hideDots: 1,
-                }
-            })
-            //Ability to export chart to svg
-            expBtn2.addEventListener('click', () => {
-                if (chart != undefined)    {
-                    chart.export()
                 }
             })
             break
@@ -264,12 +268,12 @@ const buildChart2 = async (id) => {
     };
 }
 
+//method for building charts (#chart3 & #chart4) for the data of population and employment rate (1987-2021).
 const buildChart3 = async (id) => {
-    const data = await fetchChartData(chartURL3, updateJsonQuery2(id))
+    const data = await fetchChartData(chartURL2, updateJsonQuery2(id))
     const values = data.value
     const labels = Object.values(data.dimension.Vuosi.category.label)
     const area = Object.values(data.dimension["Alue 2021"].category.label)[0]
-    //console.log(data)
 
     let populations = []
     let employments = []
@@ -291,8 +295,6 @@ const buildChart3 = async (id) => {
             years.push(label)
         }
     })
-    //console.log(populations)
-    //console.log(employments)
 
     const dataArray1 = [{name: area, values: populations}]
     const dataArray2 = [{name: area, values: employments}]
@@ -327,44 +329,44 @@ const buildChart3 = async (id) => {
             hideDots: 1,
         }
     })
-
-    //Ability to export chart to svg
-    expBtn3.addEventListener('click', () => {
-        if (chart1 != undefined)    {
-            chart1.export()
-        }
-    })
-    
-    expBtn4.addEventListener('click', () => {
-        if (chart2 != undefined)    {
-            chart2.export()
-        }
-    })
 }
 
 //Fetching methods:
 const fetchData = async (url) => {
-    const dataPromise = await fetch(url)
-    const dataJSON = await dataPromise.json()
-    //console.log(dataJSON)
-    return dataJSON
+    try {
+        const dataPromise = await fetch(url)
+        const dataJSON = await dataPromise.json()
+        return dataJSON
+    }
+    catch (error) {
+        console.log(error)
+    }
 }
 
 const fetchChartData = async (url, body) => {
-    const dataPromise = await fetch(url, {
-        method: "POST",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify(body)
-    })
-    if (!dataPromise.ok)    {
-        return;
+    try {
+        const dataPromise = await fetch(url, {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify(body)
+        })
+        if (!dataPromise.ok)    {
+            return;
+        }
+        const dataJSON = await dataPromise.json()
+        return dataJSON
     }
-    const dataJSON = await dataPromise.json()
-    return dataJSON
+    catch (error) {
+        console.log(error)
+    }
 }
 
 //Initialitzation calls
-initMap()
-buildChart1(updateJsonQuery("SSS"))
-buildChart2("ko ")
-buildChart3("SSS")
+const start = () => {
+    initMap()
+    buildChart1(updateJsonQuery1("SSS"))
+    buildChart2("ko ")
+    buildChart3("SSS")
+}
+
+start()

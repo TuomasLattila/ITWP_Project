@@ -1,12 +1,15 @@
+//HTML Elements-------------------------------------------------
 const dropDownMenu1 = document.getElementById("municipality-list1")
 const dropDownMenu2 = document.getElementById("municipality-list2")
 const pageBtn = document.getElementById("change-page")
 const dropArea1 = document.getElementById("drop-area1")
 const dropArea2 = document.getElementById("drop-area2")
-
+//--------------------------------------------------------------
+//URLs for fetching data ---------------------------------------
 const chartURL = 'https://statfin.stat.fi:443/PxWeb/api/v1/fi/StatFin/evaa/statfin_evaa_pxt_13sw.px'
 const geoURL = 'https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326'
-
+//--------------------------------------------------------------
+//JSON Query bodies --------------------------------------------
 const updateJsonQuery = (areaId, year) => {
     const jsonQuery = {
         "query": [
@@ -70,47 +73,14 @@ const updateJsonQuery = (areaId, year) => {
     }
     return jsonQuery
 }
+//--------------------------------------------------------------
 
+// Page change listener
 pageBtn.addEventListener("click", () => {
     window.location.href = "index.html"
 })
 
-dropArea1.addEventListener('drop', async () => {
-    const yearLabel1 = document.getElementById("year-label1")
-    await updateChart(dropDownMenu1, "#chart1", yearLabel1.innerText)
-})
-
-dropArea2.addEventListener('drop', async () => {
-    const yearLabel2 = document.getElementById("year-label2")
-    await updateChart(dropDownMenu2, "#chart2", yearLabel2.innerText)
-})
-
-//updates chart data
-dropDownMenu1.addEventListener('change', async () => {
-    const yearLabel1 = document.getElementById("year-label1")
-    await updateChart(dropDownMenu1, "#chart1", yearLabel1.innerText)
-})
-
-dropDownMenu2.addEventListener('change', async () => {
-    const yearLabel2 = document.getElementById("year-label2")
-    await updateChart(dropDownMenu2, "#chart2", yearLabel2.innerText)
-})
-
-const updateChart = async (dropDownMenu, chartID, year) => {
-    const name = dropDownMenu.value
-    let id
-
-    const data = await fetchData(geoURL)
-    const areaList = data.features
-
-    areaList.forEach((area) => {
-        if (area.properties.nimi === name)  {
-            id = area.properties.kunta
-        }
-    })
-    buildChart(id, chartID, year)
-}
-
+//Initializes the drop-down menu with all the municipalities of Finland
 const initDropDownMenu = async () => {
     const data = await fetchData(geoURL)
     const areaList = data.features
@@ -126,28 +96,59 @@ const initDropDownMenu = async () => {
     })
 }
 
+//Updates chart data automatically when draged year is dropped to the grey box.
+dropArea1.addEventListener('drop', async () => {
+    const yearLabel1 = document.getElementById("year-label1")
+    await updateChart(dropDownMenu1, "#chart1", yearLabel1.innerText)
+})
+
+dropArea2.addEventListener('drop', async () => {
+    const yearLabel2 = document.getElementById("year-label2")
+    await updateChart(dropDownMenu2, "#chart2", yearLabel2.innerText)
+})
+
+//Updates chart data automatically when the municipality changes in the drop-down menu.
+dropDownMenu1.addEventListener('change', async () => {
+    const yearLabel1 = document.getElementById("year-label1")
+    await updateChart(dropDownMenu1, "#chart1", yearLabel1.innerText)
+})
+
+dropDownMenu2.addEventListener('change', async () => {
+    const yearLabel2 = document.getElementById("year-label2")
+    await updateChart(dropDownMenu2, "#chart2", yearLabel2.innerText)
+})
+
+//Gets new data and builds new chart
+const updateChart = async (dropDownMenu, chartID, year) => {
+    const name = dropDownMenu.value
+    let id
+
+    const data = await fetchData(geoURL)
+    const areaList = data.features
+
+    areaList.forEach((area) => {
+        if (area.properties.nimi === name)  {
+            id = area.properties.kunta
+        }
+    })
+    buildChart(id, chartID, year)
+}
+
+//Builds new pie chart 
 const buildChart = async (id, chartID, yearID) => {
     const data = await fetchData(chartURL)
-    //console.log(data)
     const valueTexts = data.variables[3].valueTexts
     const values = data.variables[3].values
-    //console.log(valueTexts)
-    //console.log(values)
 
     for (let i = 0; i < valueTexts.length; i++) {
         let ID = values[i]
-        //console.log(ID)
         let res = valueTexts[i].slice(2, 5)
-        //console.log(res)
         if (res == id)  {
-            //console.log(yearID)
             let data = await fetchChartData(chartURL, updateJsonQuery(ID, yearID))
-            //console.log(data)
             const year = Object.values(data.dimension.Vuosi.category.label).reverse()[0]
             const area = Object.values(data.dimension["Vaalipiiri ja kunta vaalivuonna"].category.label)[0]
             const parties = Object.values(data.dimension.Puolue.category.label)
             const values = data.value.reverse()
-            //console.log(values)
 
             array = []
             for (let i = 0; i < 9; i++) {
@@ -173,28 +174,41 @@ const buildChart = async (id, chartID, yearID) => {
     };
 }
 
+//Fetch methods:
 const fetchData = async (url) => {
-    const dataPromise = await fetch(url)
-    const dataJSON = await dataPromise.json()
-    //console.log(dataJSON)
-    return dataJSON
+    try {
+        const dataPromise = await fetch(url)
+        const dataJSON = await dataPromise.json()
+        return dataJSON
+    }
+    catch (error) {
+        console.log(error)
+    }
 }
 
 const fetchChartData = async (url, body) => {
-    const dataPromise = await fetch(url, {
-        method: "POST",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify(body)
-    })
-    if (!dataPromise.ok)    {
-        return;
+    try {
+        const dataPromise = await fetch(url, {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify(body)
+        })
+        if (!dataPromise.ok)    {
+            return;
+        }
+        const dataJSON = await dataPromise.json()
+        return dataJSON
     }
-    const dataJSON = await dataPromise.json()
-    return dataJSON
+    catch (error) {
+        console.log(error)
+    }
 }
 
 //Initialitzation calls
-initDropDownMenu()
-buildChart('405', "#chart1", "2023")
-buildChart('091', "#chart2", "2023")
+const start = () => {
+    initDropDownMenu()
+    buildChart('005', "#chart1", "2023")
+    buildChart('005', "#chart2", "2023")
+}
 
+start()

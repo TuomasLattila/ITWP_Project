@@ -58,16 +58,20 @@ li  {
     
 }
 
-#item4 {
+.static-item {
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
     background-color: #1d1c1c;
+    max-width: 100%;
+    padding: 5px;
 }
 
 .item  {
     border: 3px solid rgb(47, 0, 255);
     border-radius: 10px;
     background-color: #333;
+    max-width: 100%;
+    padding: 5px;
 }
 
 .info-item {
@@ -92,9 +96,11 @@ li  {
     height: 100%;
     gap: 10px;
 }
-.item  {
-    max-width: 100%;
-    padding: 5px;
+.static-chart-div {
+    background-color: #1d1c1c;
+}
+.chart-div {
+    background-color: #333;
 }
 
 @media (min-width: 1300px)   {

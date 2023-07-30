@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="distLeaflet/leaflet.css">
     <script src="distLeaflet/leaflet.js"></script>
     
+    <script src="html2canvas/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
 </head>
 <body>
@@ -41,26 +42,26 @@
 
         <div class="item" id="item3">
             <label class="txt" for="chart4">Työllisyys-% (Valitse kunta kartalta): </label>
-            <div class="chart" id="chart4"></div>
-            <button class="expBtn1" id="expChart4">Export</button>
+            <div class="chart-div" id="chart4"></div>
+            <button class="expBtn1" id="expChart4">Lataa</button>
         </div>
 
-        <div class="item" id="item4">
+        <div class="static-item" id="item4">
             <label class="txt" for="chart">Viimeisin äänestystulos:</label>
-            <div class="chart" id="chart"></div>
-            <button class="expBtn2" id="expChart1">Export</button>
+            <div class="static-chart-div" id="chart"></div>
+            <button class="expBtn2" id="expChart1">Lataa</button>
         </div>
 
         <div class="item" id="item5">
             <label class="txt" for="chart2">Äänestyshistoria (Valitse kunta kartalta): </label>
-            <div class="chart" id="chart2"></div>
-            <button class="expBtn1" id="expChart2">Export</button>
+            <div class="chart-div" id="chart2"></div>
+            <button class="expBtn1" id="expChart2">Lataa</button>
         </div>
 
         <div class="item" id="item2">
             <label class="txt" for="chart3">Väkiluku (Valitse kunta kartalta): </label>
-            <div class="chart" id="chart3"></div>
-            <button class="expBtn1" id="expChart3">Export</button>
+            <div class="chart-div" id="chart3"></div>
+            <button class="expBtn1" id="expChart3">Lataa</button>
         </div>
     </div>
 </body>
