@@ -13,16 +13,22 @@ html    {
     height: 30px;
 }
 
-.header {
-    display: grid;
-    grid-template-rows: 50% 50%;
-    color: #FFFDFA;
+ul {
+    text-align: center;
+    display: inline;
 }
 
-.header-item {
+.li1 {
+    text-align: left;
+}
+.li2 {
     text-align: center;
-    height: 50px;
-    margin: 0%;
+}
+.header {
+    color: #FFFDFA;
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 22pt;
 }
 
 #drag-container {
@@ -111,18 +117,6 @@ html    {
 @media (max-width: 646px)   {
     #drag-container {
         height: 100px;
-    }
-}
-
-@media (max-width: 1114px)   {
-    #info {
-        margin-bottom: 40px;
-    }
-}
-
-@media (max-width: 636px)   {
-    #info {
-        margin-bottom: 70px;
     }
 }
 

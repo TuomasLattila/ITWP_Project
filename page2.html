@@ -28,10 +28,16 @@
             event.target.innerHTML = data
         }
     </script>
-    <div class="header">
-        <button class="header-item" id="change-page">Taikaisin</button>
-        <h1 id="info" class="header-item">Raahaa vuosi harmaaseen laatikkoon ja valitse listasta kunta</h1>
-    </div>
+    <nav>
+        <ul>
+            <li class="li1">
+                <button class="back-button" id="change-page">Taikaisin</button>
+            </li>
+            <li class="l12">
+                <h1 class="header">Raahaa vuosi harmaaseen laatikkoon ja valitse listasta kunta</h1>
+            </li>
+        </ul>
+    </nav>
     
     <div id="drag-container" class="drag-area">
         <div class="year" draggable="true" ondragstart="drag(event)" id="header">2023</div>
