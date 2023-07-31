@@ -261,6 +261,13 @@ const buildChart2 = async (id) => {
                 colors: ['#006288', '#ffde55', '#f54b4b', '#349a2b', '#61bf1a', '#f00a64', '#ffdd93', '#0135a5'],
                 lineOptions: {
                     hideDots: 1,
+                },
+                axisOptions: {
+                    xIsSeries: 1
+                },
+                tooltipOptions: {
+                    formatTooltipX: (d) => "",
+                    formatTooltipY: (d) => ""
                 }
             })
             break
@@ -277,22 +284,12 @@ const buildChart3 = async (id) => {
 
     let populations = []
     let employments = []
-    let years = []
     values.forEach((value, index) => {
         if (index < 35) {
-            if (index % 2 == 0) {
-                populations.push(value)
-            }
+            populations.push(value)
         }
         else {
-            if (index % 2 != 0) {
-                employments.push(value)
-            }
-        }
-    })
-    labels.forEach((label, index) => {
-        if (index % 2 == 0) {
-            years.push(label)
+            employments.push(value)
         }
     })
 
@@ -300,11 +297,11 @@ const buildChart3 = async (id) => {
     const dataArray2 = [{name: area, values: employments}]
 
     const chartData1 = {
-        labels: years,
+        labels: labels,
         datasets: dataArray1
     }
     const chartData2 = {
-        labels: years,
+        labels: labels,
         datasets: dataArray2
     }
 
@@ -316,6 +313,9 @@ const buildChart3 = async (id) => {
         lineOptions: {
             regionFill: 1,
             hideDots: 1,
+        },
+        axisOptions: {
+            xIsSeries: 1
         }
     })
 
@@ -327,6 +327,12 @@ const buildChart3 = async (id) => {
         lineOptions: {
             regionFill: 1,
             hideDots: 1,
+        },
+        axisOptions: {
+            xIsSeries: 1
+        },
+        tooltipOptions: {
+            formatTooltipY: (d) => d + "%"
         }
     })
 }
