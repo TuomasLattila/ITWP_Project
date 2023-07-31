@@ -1,4 +1,3 @@
-Data portal :+1:
 # Documentation
 
 ## Made by:
@@ -43,11 +42,13 @@ Features implemented:
 - Application is responsive and can be used on both desktop and mobile environment: (4/4)
 - Application works on Firefox, Safari, Edge and Chrome: (2/2)
 - Drag’n’drop new data to charts/maps: (4/4)
-- The application show relevant data on a map and user has change to change the data: (2/3)
+- The application show relevant data on a map and user has change to change the data: (1/3)
 - The application show relevant data on a chart and user has chance to change the data: (3/3)
 - User is able to switch between different layers of data on map: (0/2)
 - By clicking the map user has an option to get to additional charts covering that area: (4/4)
 - There are more than two items of data available: (4/4)
 - Able to download the visualization as a PNG (or SVG) image: (2/2)
+- My own features:
+  - Second page: (2p)
 
-Total points: 27p
+Total points: 28p
