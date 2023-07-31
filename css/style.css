@@ -110,13 +110,16 @@ html    {
     background-color: #333;
 }
 
-@media (min-width: 1670px)   {
+@media (min-width: 1370px)   {
     #map {
         height: 790px;
     }
+    .info-item  {
+        margin: 0;
+    }
     .container  {
         grid-template-columns: 40% 30% 30%;
-        grid-template-rows: 10% 10% 40% 40%;
+        grid-template-rows: 10% 6% 40% 40%;
     }
     #item1  {
         grid-column-start: 1;
@@ -156,9 +159,12 @@ html    {
     }
 }
 
-@media (max-width: 1669px)   {
+@media (max-width: 1369px)   {
     #map {
-        height: 610px;
+        height: 660px;
+    }
+    .info-item  {
+        margin: 0px;
     }
     .container  {
         grid-template-columns: 50% 50%;
@@ -205,6 +211,9 @@ html    {
 @media (max-width: 799px)   {
     #map {
         height: 600px;
+    }
+    .info-item {
+        font-size: 10pt;
     }
     .container  {
         grid-template-columns: 100%;
