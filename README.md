@@ -13,6 +13,14 @@ There is also a second page which holds a list of different election years from 
 
 Both of the pages are made responsive so that the page looks good and can be used on any screen size. 
 
+## Pictures of both pages:
+- Main page:
+![Kuvakaappaus 2023-07-31 17-31-06](https://github.com/TuomasLattila/ITWP_Project/assets/120785942/6418e2b7-e2ea-494b-a510-58bb9193b3ba)
+
+- Second page:
+![Kuvakaappaus 2023-07-31 17-31-29](https://github.com/TuomasLattila/ITWP_Project/assets/120785942/511c4142-e4cf-4628-bd6a-347b50b9145c)
+
+
 ## Tools used in this project:
 - Leaflet (map) Link: https://leafletjs.com/
 - Frappe-charts (charts) Link: https://frappe.io/charts
